@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<div class="container mt-4">
+  <h3>Admin Dashboard</h3>
+  <div class="mb-3">
+    <p><strong>Total Scans:</strong> <%= stats.total_scans %></p>
+    <p><strong>Fake:</strong> <%= stats.fake_count %></p>
+    <p><strong>Real:</strong> <%= stats.real_count %></p>
+  </div>
+  <h5>Users</h5>
+  <ul class="list-group">
+    <% users.forEach(function(u) { %>
+      <li class="list-group-item"><%= u.email %> (<%= u.role %>)</li>
+    <% }); %>
+  </ul>
+</div>
+<%- include('partials/footer') %>
