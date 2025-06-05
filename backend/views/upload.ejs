@@ -1,0 +1,173 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card bg-dark text-white">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Upload Media for Analysis</h3>
+          <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+          <% if (uploadResult) { %>
+            <div class="mt-3 alert alert-info">
+              <strong>Result:</strong> <%= uploadResult.result %><br>
+              <strong>Confidence:</strong> <%= uploadResult.confidence %>%
+            </div>
+          <% } %>
+          
+          <form action="/media/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <div class="mb-4">
+              <label class="form-label">Select Media Type</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="mediaType" id="image" value="image" checked>
+                <label class="btn btn-outline-light" for="image">Image</label>
+                
+                <input type="radio" class="btn-check" name="mediaType" id="video" value="video">
+                <label class="btn btn-outline-light" for="video">Video</label>
+              </div>
+            </div>
+
+            <div class="upload-zone mb-4">
+              <input type="file" name="media" id="media" class="form-control" 
+                     accept="image/*,video/*" required 
+                     style="display: none;" />
+              <label for="media" class="upload-label">
+                <div class="text-center p-5 border border-light rounded upload-area">
+                  <div class="upload-icon mb-3">↑</div>
+                  <p class="mb-0">Drag and drop your file here<br>or click to browse</p>
+                  <p class="mt-2 text-muted small">Supported formats: JPG, PNG, MP4, MOV</p>
+                </div>
+              </label>
+              <div id="preview" class="mt-3 text-center"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2">
+              Analyze for Deepfakes
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card bg-dark text-white mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Recent Uploads</h5>
+          <div class="recent-uploads">
+            <p class="text-muted text-center">No recent uploads</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.upload-zone {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area {
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-check:checked + .btn-outline-light {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #2196F3, #00BCD4);
+  border: none;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #1976D2, #0097A7);
+  transform: translateY(-1px);
+}
+</style>
+
+<script>
+document.getElementById('media').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const preview = document.getElementById('preview');
+  
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (file.type.startsWith('image/')) {
+        preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 300px">`;
+      } else if (file.type.startsWith('video/')) {
+        preview.innerHTML = `
+          <video controls class="img-fluid rounded" style="max-height: 300px">
+            <source src="${e.target.result}" type="${file.type}">
+            Your browser does not support the video tag.
+          </video>`;
+      }
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// Drag and drop functionality
+const uploadZone = document.querySelector('.upload-zone');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  uploadZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults (e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+  uploadZone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+  uploadZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+  document.querySelector('.upload-area').style.borderColor = '#2196F3';
+  document.querySelector('.upload-area').style.background = 'rgba(33, 150, 243, 0.1)';
+}
+
+function unhighlight(e) {
+  document.querySelector('.upload-area').style.borderColor = '';
+  document.querySelector('.upload-area').style.background = '';
+}
+
+uploadZone.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+  const dt = e.dataTransfer;
+  const files = dt.files;
+  document.getElementById('media').files = files;
+  
+  // Trigger change event
+  const event = new Event('change');
+  document.getElementById('media').dispatchEvent(event);
+}
+</script>
+
+<%- include('partials/footer') %>
