@@ -5,7 +5,29 @@ A web-based application that helps detect deepfake media using advanced detectio
 - User Authentication: Secure login and registration system
 - Media Upload: Upload images and videos for deepfake detection
 - Real-time Analysis: Get instant detection results with confidence scores
+- Admin Dashboard: Monitor and manage the detection system
+- Detailed Reports: View and analyze detection reports
+- Secure Architecture: Implemented with security best practices
 
+
+## Tech Stack
+### Frontend
+- React.js
+- Bootstrap for styling
+- Axios for API calls
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd deepfake-detection-system
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
 3. Set up MongoDB:
 - Ensure MongoDB is installed and running on your system
 - Configure the database connection in `core/config/db.js`
@@ -45,7 +67,7 @@ MIT License
 
 ## Author
 
-Ramya Sri Kodem
+Ramya Sri Kodem,Sai Mourya Kakkireni
 
 ## Contributing
 
