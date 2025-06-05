@@ -16,6 +16,15 @@ A web-based application that helps detect deepfake media using advanced detectio
 - Bootstrap for styling
 - Axios for API calls
 
+  ### Backend
+- Node.js
+- Express.js
+- MongoDB (with Mongoose)
+- EJS (for server-side templating)
+- Express Session for authentication
+- Multer for file uploads
+- Helmet for security
+
 ## Installation
 
 1. Clone the repository:
@@ -61,6 +70,30 @@ The server will start on port 3050 by default.
 ├── app.js               # Application entry point
 └── package.json        # Project dependencies
 ```
+## Usage
+
+1. Register a new account or login with existing credentials
+2. Navigate to the upload page
+3. Select media file (image/video) for analysis
+4. Click "Scan" to initiate the deepfake detection
+5. View the results showing detection status and confidence score
+
+### Admin Features
+
+1. Access the admin dashboard at `/admin`
+2. View system statistics and user activities
+3. Manage user accounts and detection reports
+4. Configure system settings
+
+## Security
+
+The application implements several security measures:
+- Helmet.js for secure HTTP headers
+- CORS protection
+- Session-based authentication
+- Secure password hashing with bcrypt
+- Content Security Policy (CSP)
+- 
 ## License
 
 MIT License
